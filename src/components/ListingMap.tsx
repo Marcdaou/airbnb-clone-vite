@@ -16,6 +16,8 @@ type Props = {
   onBoundsChange: (b: LatLngBounds) => void
   fitKey: string
   resultCount: number
+  /** Listings to fit bounds to (defaults to `listings`); lets a refit cover all fetched results, not just the area-filtered ones (E5). */
+  fitTo?: Listing[]
   /** Mobile: show the selected card docked at the bottom instead of a popup. */
   docked?: boolean
 }
@@ -65,9 +67,10 @@ const pinIcon = (price: number, active: boolean) => L.divIcon({
 
 export default function ListingMap({
   listings, hoveredId, selectedId, onSelect, searchAsMove, onSearchAsMoveChange,
-  onBoundsChange, fitKey, resultCount, docked = false,
+  onBoundsChange, fitKey, resultCount, fitTo, docked = false,
 }: Props) {
   const pins = useMemo(() => listings.filter(hasCoords), [listings])
+  const fitPins = useMemo(() => (fitTo ? fitTo.filter(hasCoords) : pins), [fitTo, pins])
   const selected = pins.find(l => l.id === selectedId) ?? null
 
   useEffect(() => {
@@ -82,7 +85,7 @@ export default function ListingMap({
       <MapContainer center={WORLD} zoom={WORLD_ZOOM} keyboard worldCopyJump className="h-full w-full">
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' />
-        <FitController pins={pins} fitKey={fitKey} />
+        <FitController pins={fitPins} fitKey={fitKey} />
         <MapEvents onBoundsChange={onBoundsChange} onSelect={onSelect} />
         {pins.map(l => {
           const active = l.id === hoveredId || l.id === selectedId
