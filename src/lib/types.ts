@@ -16,8 +16,8 @@ export type Listing = {
   review_count: number
   host_name: string
   host_avatar: string
-  lat: number
-  lng: number
+  lat: number | null
+  lng: number | null
 }
 
 export type Review = {

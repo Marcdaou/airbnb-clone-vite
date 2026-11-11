@@ -5,6 +5,7 @@ import {
   Star, Share, Heart, Grid3x3, X, Check, Wifi, Car, Waves, Utensils, Tv, Wind, Flame, WashingMachine,
   Dumbbell, Coffee, Mountain, Laptop, PawPrint, Bath, Snowflake, TreePine, ShieldCheck, type LucideIcon,
 } from 'lucide-react'
+import { hasCoords } from '../lib/geo'
 import type { Listing, Review } from '../lib/types'
 import { supabase } from '../lib/supabase'
 import BookingCard from '../components/BookingCard'
@@ -44,7 +45,7 @@ export default function ListingPage() {
 
   const imgs = listing.images ?? []
   const d = 0.01
-  const bbox = `${listing.lng - d},${listing.lat - d},${listing.lng + d},${listing.lat + d}`
+  const bbox = hasCoords(listing) ? `${listing.lng - d},${listing.lat - d},${listing.lng + d},${listing.lat + d}` : null
   const avg = reviews.length ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : listing.rating
   const s = (n: number, w: string) => `${n} ${w}${n === 1 ? '' : 's'}`
 
@@ -119,8 +120,8 @@ export default function ListingPage() {
       <section className="py-10">
         <h3 className="mb-2 text-xl font-semibold">Where you'll be</h3>
         <p className="mb-4 text-gray-700">{listing.city}, {listing.country}</p>
-        <iframe title="map" className="h-[400px] w-full rounded-2xl border-0"
-          src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${listing.lat},${listing.lng}`} />
+        {bbox && <iframe title="map" className="h-[400px] w-full rounded-2xl border-0"
+          src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${listing.lat},${listing.lng}`} />}
       </section>
     </div>
   )
