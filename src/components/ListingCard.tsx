@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Heart, Star } from 'lucide-react'
 import type { Listing } from '../lib/types'
 
-type Props = { listing: Listing; wished: boolean; onToggleWish: (id: string) => void }
+type Props = { listing: Listing; wished: boolean; onToggleWish: (id: string) => void; onHover?: (id: string | null) => void }
 
-export default function ListingCard({ listing, wished, onToggleWish }: Props) {
+export default function ListingCard({ listing, wished, onToggleWish, onHover }: Props) {
   const [i, setI] = useState(0)
   const imgs = listing.images?.length ? listing.images : ['']
   const go = (e: React.MouseEvent, d: number) => {
@@ -14,7 +14,9 @@ export default function ListingCard({ listing, wished, onToggleWish }: Props) {
   }
 
   return (
-    <Link to={`/rooms/${listing.id}`} className="group block">
+    <Link to={`/rooms/${listing.id}`} className="group block"
+      onMouseEnter={() => onHover?.(listing.id)} onMouseLeave={() => onHover?.(null)}
+      onFocus={() => onHover?.(listing.id)} onBlur={() => onHover?.(null)}>
       <div className="relative aspect-[20/19] overflow-hidden rounded-xl bg-gray-200">
         {imgs[i] && <img src={imgs[i]} alt={listing.title} loading="lazy" className="h-full w-full object-cover" />}
         <button aria-label="Save to wishlist"
