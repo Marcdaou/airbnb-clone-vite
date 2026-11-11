@@ -2,17 +2,17 @@ import { Link } from 'react-router-dom'
 import { Star, X } from 'lucide-react'
 import type { Listing } from '../lib/types'
 
-type Props = { listing: Listing; onClose: () => void }
+type Props = { listing: Listing; onClose: () => void; docked?: boolean }
 
-export default function MapPinCard({ listing, onClose }: Props) {
+export default function MapPinCard({ listing, onClose, docked = false }: Props) {
   const img = listing.images?.[0]
   return (
-    <div className="relative w-[280px] overflow-hidden rounded-xl bg-white text-neutral-900">
-      <Link to={`/rooms/${listing.id}`} className="block !text-inherit no-underline">
-        <div className="aspect-[20/19] bg-gray-200">
+    <div className={`relative overflow-hidden rounded-xl bg-white text-neutral-900 ${docked ? 'w-full' : 'w-[280px]'}`}>
+      <Link to={`/rooms/${listing.id}`} className={`!text-inherit no-underline ${docked ? 'flex' : 'block'}`}>
+        <div className={`aspect-[20/19] shrink-0 bg-gray-200 ${docked ? 'w-28' : ''}`}>
           {img && <img src={img} alt={listing.title} className="h-full w-full object-cover" />}
         </div>
-        <div className="p-3 text-[15px]">
+        <div className={`min-w-0 p-3 text-[15px] ${docked ? 'flex-1 pr-10' : ''}`}>
           <div className="flex justify-between gap-2">
             <h3 className="truncate font-semibold">{listing.city}, {listing.country}</h3>
             <span className="flex shrink-0 items-center gap-1"><Star size={14} className="fill-current" />{Number(listing.rating).toFixed(2)}</span>

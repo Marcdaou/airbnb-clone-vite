@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer, ZoomControl, useMap, useMapEvents } from 'react-leaflet'
 import L, { type LatLngBounds } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import type { Listing } from '../lib/types'
@@ -82,7 +82,8 @@ export default function ListingMap({
 
   return (
     <div className="relative isolate h-full w-full">
-      <MapContainer center={WORLD} zoom={WORLD_ZOOM} keyboard worldCopyJump className="h-full w-full">
+      <MapContainer center={WORLD} zoom={WORLD_ZOOM} keyboard worldCopyJump zoomControl={false} className="h-full w-full">
+        <ZoomControl position="topright" />
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' />
         <FitController pins={fitPins} fitKey={fitKey} />
@@ -115,8 +116,8 @@ export default function ListingMap({
 
       {selected && docked && (
         <div className="absolute inset-x-4 bottom-24 z-[1000] flex justify-center">
-          <div className="w-full max-w-[360px] overflow-hidden rounded-xl shadow-xl [&>div]:w-full">
-            <MapPinCard listing={selected} onClose={() => onSelect(null)} />
+          <div className="w-full max-w-[420px] overflow-hidden rounded-xl shadow-xl">
+            <MapPinCard listing={selected} onClose={() => onSelect(null)} docked />
           </div>
         </div>
       )}
