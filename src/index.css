@@ -9,3 +9,15 @@
 body { @apply text-neutral-900 antialiased bg-white; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
+
+/* SCRUM-17: listing map price pins + popup */
+.price-pin {
+  @apply inline-block -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-white px-2.5 py-1 text-sm font-semibold text-neutral-900 shadow-md ring-1 ring-black/10 transition-transform;
+  cursor: pointer;
+}
+.price-pin:hover { @apply scale-105; }
+.price-pin.is-active { @apply scale-110 bg-neutral-900 text-white ring-neutral-900; }
+.map-pin-popup .leaflet-popup-content-wrapper { @apply overflow-hidden rounded-xl p-0 shadow-xl; }
+.map-pin-popup .leaflet-popup-content { margin: 0; width: 280px !important; }
+.map-pin-popup .leaflet-popup-tip-container { display: none; }
+.map-pin-popup a.leaflet-popup-close-button { display: none; }
