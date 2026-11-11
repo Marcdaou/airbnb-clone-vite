@@ -41,15 +41,17 @@ function FitController({ pins, fitKey }: { pins: GeoListing[]; fitKey: string })
 /** Reports bounds on moveend (debounced 300ms) and clears selection on map click. */
 function MapEvents({ onBoundsChange, onSelect }: Pick<Props, 'onBoundsChange' | 'onSelect'>) {
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const report = useRef(onBoundsChange)
+  useEffect(() => { report.current = onBoundsChange })
   const map = useMapEvents({
     moveend: () => {
       clearTimeout(timer.current)
-      timer.current = setTimeout(() => onBoundsChange(map.getBounds()), 300)
+      timer.current = setTimeout(() => report.current(map.getBounds()), 300)
     },
     click: () => onSelect(null),
   })
   useEffect(() => {
-    onBoundsChange(map.getBounds())
+    report.current(map.getBounds())
     return () => clearTimeout(timer.current)
   }, [map])
   return null
